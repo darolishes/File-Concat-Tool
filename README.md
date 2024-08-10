@@ -17,6 +17,7 @@ You can clone the repository and use the tool directly from the command line.
 git clone https://github.com/yourusername/file-concat-tool.git
 cd file-concat-tool
 python concat_files.py -h
+```
 
 ## Usage
 
