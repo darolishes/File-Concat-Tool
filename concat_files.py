@@ -4,10 +4,11 @@ import math
 from typing import List, Tuple, Set
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from tqdm import tqdm
+import re
 from pygments import highlight
 from pygments.lexers import get_lexer_for_filename, TextLexer
-from pygments.formatters import HtmlFormatter
-import html
+from pygments.formatters import TerminalFormatter
+from pygments.util import ClassNotFound
 
 def should_ignore(path: Path, ignore_patterns: Set[str]) -> bool:
     """
@@ -51,19 +52,22 @@ def write_concatenated_file(output_file: Path, file_paths: List[Path], start_ind
                     outfile.write(f'## File: {file_path}\n\n')
                     try:
                         lexer = get_lexer_for_filename(file_path)
-                    except:
+                    except ClassNotFound:
                         lexer = TextLexer()
 
-                    formatter = HtmlFormatter(style='default', noclasses=True)
+                    # Use TerminalFormatter for ANSI color codes
+                    formatter = TerminalFormatter()
                     highlighted = highlight(content, lexer, formatter)
 
-                    # Convert HTML to Markdown-style code block
-                    code_block = f"```{lexer.name.lower()}\n{html.unescape(highlighted)}\n```\n\n"
-                    outfile.write(code_block)
+                    # Remove ANSI color codes for plain text
+                    clean_content = re.sub(r'\x1b\[[0-9;]*m', '', highlighted)
+
+                    # Write the clean, highlighted content as a Markdown code block
+                    outfile.write(f"```{lexer.aliases[0] if lexer.aliases else ''}\n{clean_content.strip()}\n```\n\n")
                 else:
                     outfile.write(f'// File: {file_path}\n{content}\n\n')
             except Exception as e:
-                print(f"Could not read file {file_path}: {e}")
+                print(f"Could not process file {file_path}: {e}")
 
 def concatenate_files(file_paths: List[Path], output_file: Path, start_index: int, end_index: int, output_format: str) -> None:
     """
@@ -113,7 +117,7 @@ def parse_arguments() -> Tuple[Path, Path, int, Set[str], Set[str], str]:
     parser.add_argument('-o', '--output_directory', type=Path, required=True, help='Path to the output directory')
     parser.add_argument('-n', '--number_of_files', type=int, required=True, help='Number of output files')
     parser.add_argument('-i', '--ignore', type=str, help='Comma-separated list of patterns to ignore', default='')
-    parser.add_argument('-e', '--extensions', type=str, help='Comma-separated list of file extensions to include', default='.js,.jsx,.css,.html,.json,.md,.mdx,.txt,.py,.sh,.yaml,.yml')
+    parser.add_argument('-e', '--extensions', type=str, help='Comma-separated list of file extensions to include', default='.js,.jsx,.css,.html,.json,.md,.mdx,.txt,.py,.sh,.yaml,.yml,.tsx,.ts')
     parser.add_argument('-f', '--format', type=str, choices=['txt', 'md'], default='txt', help='Output format: txt or md')
 
     args = parser.parse_args()
