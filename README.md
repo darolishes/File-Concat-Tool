@@ -13,7 +13,7 @@
 ## Installation
 You can clone the repository and use the tool directly from the command line.
 
-```sh
+```
 git clone https://github.com/yourusername/file-concat-tool.git
 cd file-concat-tool
 python concat_files.py -h
@@ -22,10 +22,6 @@ python concat_files.py -h
 ## Usage
 
 The tool provides a simple CLI interface. Below is the basic usage:
-
-sh
-
-Code kopieren
 
 `python concat_files.py -r path/to/your/files -o path/to/output -n 4 -i node_modules,.DS_Store` 
 
@@ -37,10 +33,6 @@ Code kopieren
 - `-i`, `--ignore`: Comma-separated list of folders or files to ignore (optional).
 
 ### Example
-
-sh
-
-Code kopieren
 
 `python concat_files.py -r ./src -o ./output -n 3 -i node_modules,.DS_Store` 
 
@@ -74,15 +66,13 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 
 For any inquiries, please contact Your Name.
 
-markdown
-
-Code kopieren
-
- ``### Hinweise zur Erweiterung:
+### Hinweise zur Erweiterung:
 - **Dateitypen hinzufügen**: Um die Unterstützung für weitere Dateitypen (wie `.md`, `.pdf`) hinzuzufügen, können Sie die bestehenden Funktionen `get_file_paths` und `write_concatenated_file` erweitern.
 - **Dateiformate behandeln**: PDF-Dateien und andere binäre Formate benötigen möglicherweise spezielle Bibliotheken (z.B. `PyPDF2` für PDF) und zusätzliche Logik, um korrekt verarbeitet zu werden.
 - **Weitere Kommandozeilenoptionen**: Erwägen Sie, zusätzliche Optionen hinzuzufügen, z.B. eine Option zur Festlegung spezifischer Formatierungsanforderungen für Markdown-Dateien.
 
-### Repository-Struktur:`` 
-
+### Repository-Struktur:
+ 
+```
 file-concat-tool/ ├── README.md ├── LICENSE ├── concat\_files.py ├── requirements.txt # Optional: Für Abhängigkeiten, falls Erweiterungen hinzugefügt werden └── tests/ # Optional: Für Unit-Tests, wenn Sie diese implementieren
+```
